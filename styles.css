@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Mango';
-  src: url('/fonts/Mango.ttf') format('truetype');
+  src: url('/static/fonts/Mango.ttf') format('truetype');
 }
 
 *,
@@ -21,7 +21,7 @@ body, html{
 }
 
 .hero {
-  background: url("/images/img01.JPG") center/cover no-repeat;
+  background: url("/static/images/img01.JPG") center/cover no-repeat;
   min-height: 100vh;
   width: 100%;
   display: flex;
@@ -248,7 +248,7 @@ body, html{
   background-color: #002110;
   overflow: hidden;
   width: 100%;
-  min-height: 100vh;
+  padding-bottom: 2rem;
 }
 
 .page h1{
@@ -257,6 +257,11 @@ body, html{
   color: #daa220;
   font-size: clamp(2.2rem, 7vw, 6rem);
   font-weight: 100;
+  line-height: 0.8;
+}
+
+.mobile-break{
+  display: none;
 }
 
 .page p{
@@ -264,6 +269,7 @@ body, html{
   font-weight: 200;
   color: #f4f4e9 ;
   text-align: center;
+  margin-top: 0.5rem;
 }
 
 .carousel-container{
@@ -389,7 +395,6 @@ body, html{
 /* Grid */
 .benefits-container {
   width: 100%;
-  min-height: 100vh;
   background-color: #f4f4e9;
   text-align: center;
   position: relative;
@@ -499,14 +504,12 @@ body, html{
 .container-background{
   background-color: #f4f4e9;
   width: 100%;
-  min-height: 100vh;
   display: flex;
   align-items: center;
 }
 
 .project-container{
   width: 100%;
-  min-height: 100vh;
   background-color: #002110;
   display: flex;
   justify-content: center;
@@ -519,6 +522,8 @@ body, html{
 }
 
 .croqui{
+  padding-top: 5rem;
+  padding-bottom: 5rem;
   width: clamp(250px, 60vw, 900px);
   position: relative;
   display: grid;
@@ -560,9 +565,9 @@ body, html{
 }
 
 .cta-btn2{
-  width: 95%;
+  width: auto;
   font-family: 'Mango';
-  font-size: clamp(1.1rem, 3.2vw, 2rem);
+  font-size: clamp(1.5rem, 4vw, 2rem);
   margin-top: 1rem;
   color: #002110;
   background-color: #daa220;
@@ -580,12 +585,9 @@ body, html{
 
 .map-background{
   width: 100%;
-  min-height: 100vh;
   background-color: #f4f4e9;
 }
 .map-section{
-  min-height: 100vh;
-  max-height: 100vh;
   background: linear-gradient(to bottom, #002110 20%, #00331b 100%);
   border-radius: 0 0 100px 100px;
 }
@@ -593,7 +595,7 @@ body, html{
   font-family: 'Mango', serif;
   color: #f4f4e9;
   font-weight: 100;
-  font-size: clamp(2.4rem, 7vw, 6rem);
+  font-size: clamp(2.8rem, 7vw, 6rem);
   text-align: center;
   padding: 2rem 0 1rem 0;
 }
@@ -613,12 +615,11 @@ body, html{
   justify-content: center;
   align-items: center;
   width: 14rem;
-  height: 3.8rem;
   font-family: 'Mango', serif;
   border: 1px solid #daa220;
   padding: 0.5rem;
   border-radius: 100px;
-  font-size: clamp(1.1rem, 2.8vw, 2rem);
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
   color: #f4f4e9;
   margin-bottom: 0.2rem;
   line-height: 1rem;
@@ -626,7 +627,7 @@ body, html{
 
 .badges2 .sub{
   font-family: 'Montserrat', sans-serif;
-  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+  font-size: clamp(0.9rem, 1.2vw, 1.2rem);
 }
 
 .contorno_esq, .contorno_dir { 
@@ -648,7 +649,7 @@ body, html{
   flex: 1 1 0;
   min-width: 300px; 
   width: clamp(300px, 70vw, 1200px);                    
-  height: clamp(400px, 60vw, 620px);    
+  height: clamp(100px, 50vw, 620px);    
   border: 0;  
   border-radius: 1rem;          
   display: block;          
@@ -658,16 +659,17 @@ body, html{
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: clamp(50px, 50vh, 550px);
+  height: clamp(150px, 55vh, 620px);
   width: clamp(450px, 90vw, 1200px);
-  margin-top: 2rem;
+  margin-top: 3rem;
 }
 
 .map .cta-btn2{
   width: auto;
-  font-size: clamp(1.1rem, 3.2vw, 2rem);
+  font-size: clamp(1.5rem, 4vw, 2rem);
   padding: 0.7rem 2rem;
-  margin-top: 4rem;
+  margin-top: clamp(10px, 5vh, 4rem);
+  margin-bottom: clamp(10px, 5vh, 4rem);
 }
 
 
@@ -683,8 +685,11 @@ body, html{
   .form-wrapper {
     width: 85%;
   }
-  .carousel-container{
-    height: 30vh;
+  .page{
+    height: 80vh;
+  }
+  .carousel-dots {
+    margin-top: 2rem;
   }
   .container-background{
     height: 80vh;
@@ -745,7 +750,7 @@ body, html{
 
   .divider {
     width: 60vw;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
   }
 
   .badges {
@@ -759,9 +764,7 @@ body, html{
   }
 
   .form-wrapper, .form-container {
-    width: 90%;
     border-radius: 0 3rem;
-    padding: 1rem 1rem;
   }
 
   .form-content {
@@ -776,11 +779,16 @@ body, html{
     padding: 0.6rem 0;
     font-size: 0.95rem;
   }
-
-  .carousel-item {
-    width: 90vw;
+  .page {
+    height: auto;
+    padding: 2rem 0 4rem 0;
   }
-
+  .carousel-track {
+    height: clamp(112px, 33.75vw, 281px); ;
+  }
+  .carousel-item {
+    width: clamp(200px, 60vw, 500px);
+  }
   .carousel-dot {
     width: 8px;
     height: 8px;
@@ -849,6 +857,7 @@ body, html{
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    border-radius: 50px 50px 0 0;
   }
   .croqui {
     margin: 0;
@@ -868,10 +877,43 @@ body, html{
   .cta p span {
     font-size: 2.3rem;
   }
+  .map-section{
+    border-radius: 0 0 50px 50px;
+  }
+  .badges2 {
+    gap: 1rem;
+  }
+  .map{
+    height: auto;
+  }
 
   .cta-btn2 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     padding: 0.5rem 1.2rem;
     width: auto;
+  }
+}
+
+@media (max-width: 720px) {
+
+  .map-container {
+    align-items: flex-start;
+  }
+  .contorno_dir, .contorno_esq {
+    transform: translateY(6vw);
+  }
+  .contorno_dir{
+    width: clamp(4rem, 15vw, 200px);
+    margin-left: -1.5rem;
+  }
+  
+  .contorno_esq {
+    width: clamp(4rem, 15vw, 200px);
+    margin-right: -1.2rem;
+  }
+}
+@media (max-width: 470px) {
+  .mobile-break {
+    display: block;
   }
 }
