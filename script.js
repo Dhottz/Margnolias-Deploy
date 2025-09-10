@@ -1,124 +1,181 @@
-const track = document.getElementById("carousel-track");
-const container = document.getElementById("carousel-container");
+// Carousel – drop-in
 
-let speed = 1.75;
-let currentX = 0;
+(function () {
+  // velocidades (px/s)
+  const SPEED_NORMAL = 120;
+  const SPEED_HOVER  = 40;
+  const SPEED_EASE   = 0.12;
 
-// Lê as imagens originais (só dos primeiros 6)
-const imageElements = Array.from(track.children).slice(0, track.children.length / 2);
-const images = imageElements.map(imgDiv => imgDiv.querySelector('img').src);
+  // revelação controlada
+  const DECODE_COUNT  = 2;     // quantas imagens originais pré-decodificar
+  const REVEAL_MIN_MS = 300;   // atraso mínimo antes de exibir
+  const REVEAL_MAX_MS = 1200;  // atraso máximo
 
-const totalSlides = images.length;
+  const container     = document.getElementById("carousel-container");
+  const track         = document.getElementById("carousel-track");
+  const dotsContainer = document.getElementById("carousel-dots");
+  const modal         = document.getElementById("modal");
+  const modalImage    = document.getElementById("modal-image");
 
-// ----- Dots -----
-const dotsContainer = document.getElementById("carousel-dots");
-dotsContainer.innerHTML = '';
-for (let i = 0; i < totalSlides; i++) {
-  const dot = document.createElement("span");
-  dot.classList.add("carousel-dot");
-  if (i === 0) dot.classList.add("active");
-  dot.addEventListener("click", () => {
-    scrollToSlide(i);
-    updateDots(i);
-    // Se o modal estiver aberto, muda a imagem do modal também
-    if (modal.style.display === "flex") {
-      showModal(i);
-    }
-  });
-  dotsContainer.appendChild(dot);
-}
-const dots = document.querySelectorAll(".carousel-dot");
+  if (!container || !track || !dotsContainer) return;
 
-// Atualiza os dots ativos
-function updateDots(idx) {
-  dots.forEach((dot, i) => {
-    dot.classList.toggle("active", i === idx);
-  });
-}
+  const allItems       = Array.from(track.children);
+  const originalsCount = Math.max(1, Math.floor(allItems.length / 2)) || allItems.length;
+  const originalItems  = allItems.slice(0, originalsCount);
+  const originalImgs   = originalItems.map(el => el.querySelector("img")).filter(Boolean);
 
-// Centraliza no slide correto (slide original, nunca nos duplicados)
-function scrollToSlide(idx) {
-  const slideWidth = track.children[0].offsetWidth;
-  currentX = -slideWidth * idx;
-  track.style.transform = `translateX(${currentX}px)`;
-}
-
-// ---- Carrossel infinito + Dots automáticos ----
-function animate() {
-  const slideWidth = track.children[0].offsetWidth;
-  const slideCount = track.children.length / 2; // só os originais
-  const resetPoint = -(slideWidth * slideCount);
-
-  currentX -= speed;
-
-  if (currentX <= resetPoint) {
-    currentX = 0;
+  dotsContainer.innerHTML = "";
+  for (let i = 0; i < originalsCount; i++) {
+    const dot = document.createElement("span");
+    dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+    dot.addEventListener("click", () => {
+      scrollToSlide(i);
+      setActiveDot(i);
+      if (modal && modal.style.display === "flex") showModal(i);
+    });
+    dotsContainer.appendChild(dot);
+  }
+  const dots = Array.from(dotsContainer.querySelectorAll(".carousel-dot"));
+  let activeDot = 0;
+  function setActiveDot(i) {
+    if (i === activeDot) return;
+    dots.forEach((d, idx) => d.classList.toggle("active", idx === i));
+    activeDot = i;
   }
 
-  track.style.transform = `translateX(${currentX}px)`;
+  let slideWidth = 1;
+  let halfWidth  = 1;
+  function measure() {
+    const first = originalItems[0];
+    slideWidth = Math.max(1, first ? first.getBoundingClientRect().width : 1);
+    halfWidth  = originalItems.reduce((acc, el) => acc + (el.getBoundingClientRect().width || slideWidth), 0);
+  }
 
-  // Dot amarelo sempre sincronizado com o centro
-  let centerIndex = Math.round(Math.abs(currentX) / slideWidth) % totalSlides;
-  if (centerIndex < 0) centerIndex += totalSlides;
-  updateDots(centerIndex);
+  let currentX     = 0;
+  let lastT        = performance.now();
+  let rafId        = null;
+  let speedTarget  = SPEED_NORMAL;
+  let speedCurrent = SPEED_NORMAL;
 
-  requestAnimationFrame(animate);
-}
+  function animate(t) {
+    const dt = Math.min(32, t - lastT);
+    lastT = t;
 
-track.addEventListener("mouseenter", () => speed = 0.5);
-track.addEventListener("mouseleave", () => speed = 1.75);
+    speedCurrent += (speedTarget - speedCurrent) * SPEED_EASE;
+    const dx = (speedCurrent / 1000) * dt;
 
-animate();
+    currentX -= dx;
+    if (currentX <= -halfWidth) currentX += halfWidth;
 
-// ---- MODAL ----
-const modal = document.getElementById("modal");
-const modalImage = document.getElementById("modal-image");
-let currentIndex = 0;
+    track.style.transform = `translate3d(${currentX}px,0,0)`;
 
-// Clique nas imagens abre o modal correto
-imageElements.forEach((imgDiv, idx) => {
-  imgDiv.querySelector('img').addEventListener("click", () => {
-    currentIndex = idx;
-    showModal(currentIndex);
+    const idx = Math.round(Math.abs(currentX) / slideWidth) % originalsCount;
+    if (idx !== activeDot) setActiveDot(idx);
+
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function scrollToSlide(idx) {
+    currentX = -slideWidth * idx;
+    track.style.transform = `translate3d(${currentX}px,0,0)`;
+    lastT = performance.now();
+  }
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  function loadAndDecode(img) {
+    img.setAttribute("fetchpriority", "high");
+    img.setAttribute("decoding", "async");
+    if (img.complete) return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+    return new Promise((resolve) => {
+      img.addEventListener("load", () => {
+        img.decode ? img.decode().then(resolve).catch(resolve) : resolve();
+      }, { once: true });
+      img.addEventListener("error", resolve, { once: true });
+    });
+  }
+  async function predecodeFirstN(n) {
+    const imgs = originalImgs.slice(0, Math.min(n, originalImgs.length));
+    await Promise.allSettled(imgs.map(loadAndDecode));
+  }
+
+  let rzTO;
+  window.addEventListener("resize", () => {
+    clearTimeout(rzTO);
+    rzTO = setTimeout(() => {
+      const idx = Math.round(Math.abs(currentX) / slideWidth) % originalsCount;
+      measure();
+      currentX = -idx * slideWidth;
+      track.style.transform = `translate3d(${currentX}px,0,0)`;
+    }, 120);
+  }, { passive: true });
+
+  let currentIndex = 0;
+
+  function showModal(index) {
+    if (!modal || !modalImage) return;
+    currentIndex = index;
+    modalImage.src = originalImgs[currentIndex]?.src || "";
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    setActiveDot(currentIndex);
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + originalsCount) % originalsCount;
+    if (modalImage) modalImage.src = originalImgs[currentIndex]?.src || "";
+    setActiveDot(currentIndex);
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % originalsCount;
+    if (modalImage) modalImage.src = originalImgs[currentIndex]?.src || "";
+    setActiveDot(currentIndex);
+  }
+
+  track.addEventListener("click", (e) => {
+    const img = e.target.closest("img");
+    if (!img) return;
+    const idx = originalImgs.findIndex(i => i.src === img.src);
+    showModal(idx >= 0 ? idx : 0);
   });
-});
 
-// Também funciona se clicar em uma imagem duplicada:
-Array.from(track.children).forEach(imgDiv => {
-  imgDiv.querySelector('img').addEventListener("click", (e) => {
-    // Sempre abre o índice do slide original (pelo data-index ou pelo src)
-    const src = e.target.src;
-    const idx = images.indexOf(src);
-    currentIndex = idx !== -1 ? idx : 0;
-    showModal(currentIndex);
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  }, { passive: true });
+
+  window.closeModal = closeModal;
+  window.prevImage  = prevImage;
+  window.nextImage  = nextImage;
+
+  track.addEventListener("pointerenter", () => { speedTarget = SPEED_HOVER; }, { passive: true });
+  track.addEventListener("pointerleave", () => { speedTarget = SPEED_NORMAL; }, { passive: true });
+  track.addEventListener("touchstart",    () => { speedTarget = SPEED_HOVER; }, { passive: true });
+  track.addEventListener("touchend",      () => { speedTarget = SPEED_NORMAL; }, { passive: true });
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    container.classList.add("is-loading");
+    container.style.visibility = "hidden";
+
+    measure();
+
+    const t0 = performance.now();
+    await Promise.race([ predecodeFirstN(DECODE_COUNT), sleep(REVEAL_MAX_MS) ]);
+    const elapsed = performance.now() - t0;
+    if (elapsed < REVEAL_MIN_MS) await sleep(REVEAL_MIN_MS - elapsed);
+
+    measure();
+
+    container.classList.remove("is-loading");
+    container.classList.add("is-ready");
+    container.style.visibility = "";
+
+    lastT = performance.now();
+    requestAnimationFrame(animate);
   });
-});
-
-function showModal(index) {
-  modalImage.src = images[index];
-  modal.style.display = "flex";
-  document.body.style.overflow = "hidden";
-  updateDots(index);
-}
-
-function closeModal() {
-  modal.style.display = "none";
-  document.body.style.overflow = "auto";
-}
-
-function prevImage() {
-  currentIndex = (currentIndex - 1 + images.length) % images.length;
-  modalImage.src = images[currentIndex];
-  updateDots(currentIndex);
-}
-
-function nextImage() {
-  currentIndex = (currentIndex + 1) % images.length;
-  modalImage.src = images[currentIndex];
-  updateDots(currentIndex);
-}
-
-// Fecha modal com ESC
-window.addEventListener('keydown', (e) => {
-  if (e.key === "Escape") closeModal();
-});
+})();

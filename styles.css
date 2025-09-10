@@ -21,7 +21,7 @@ body, html{
 }
 
 .hero {
-  background: url("/images/img01.JPG") center/cover no-repeat;
+  background: url("/images/img01.webp") center/cover no-repeat;
   min-height: 100vh;
   width: 100%;
   display: flex;
@@ -248,7 +248,7 @@ body, html{
   background-color: #002110;
   overflow: hidden;
   width: 100%;
-  padding-bottom: 2rem;
+  padding-top: 1rem;
 }
 
 .page h1{
@@ -403,7 +403,7 @@ body, html{
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding-bottom: 2rem;
+  padding-bottom: 4rem;
 }
 
 .header-deco {
@@ -436,8 +436,9 @@ body, html{
 }
 
 .semi-circle img {
-  width: clamp(30px, 10vw, 80px);
+  width: clamp(40px, 8vw, 120px);
   display: block;
+  margin-bottom: 1rem;
 }
 
 .title {
@@ -453,7 +454,7 @@ body, html{
 }
 
 .title span {
-  font-size: clamp(1.25rem, 4vw, 4.25rem);
+  font-size: clamp(1.75rem, 4vw, 4.25rem);
 }
 
 .benefits-grid {
@@ -538,8 +539,8 @@ body, html{
   z-index: 1;
 }
 .mapa{
-  width: clamp(250px, 80%, 800px);
-  max-height: clamp(250px, 80%, 800px);
+  width: clamp(250px, 80%, 1500px);
+  height: clamp(250px, 80%, 1500px);
   z-index: 0;
   border-radius: 2rem;
   background-color: #f4f4e9;
@@ -780,7 +781,7 @@ body, html{
   }
   .page {
     height: auto;
-    padding: 2rem 0 4rem 0;
+    padding: 2rem 0 0 0;
   }
   .carousel-track {
     height: clamp(112px, 33.75vw, 281px); ;
@@ -812,10 +813,6 @@ body, html{
     width: 20vw;
     height: 10vw;
   }
-
-  /*.semi-circle img {
-    width: 8vw;
-  }*/
 
   .title {
     white-space: normal;
@@ -860,6 +857,7 @@ body, html{
   }
   .croqui {
     margin: 0;
+    padding-bottom: 0;
   }
 
   .cta {
@@ -916,3 +914,30 @@ body, html{
     display: block;
   }
 }
+
+/* reserva espaço pra evitar layout shift */
+#carousel-container {
+  overflow: hidden;
+  contain: content;
+}
+
+/* ajuste a altura que o carrossel ocupa no seu layout */
+#carousel-container.is-loading {
+  visibility: hidden;                 /* não pinta enquanto decodifica */
+  contain-intrinsic-size: 320px 520px;/* reserva ~altura x largura médias */
+}
+
+/* quando pronto, pinta normalmente */
+#carousel-container.is-ready {
+  visibility: visible;
+}
+
+/* otimizações já usadas */
+#carousel-track {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+#carousel-container { overflow:hidden; contain:content; opacity:0; transition:opacity .35s ease; }
+#carousel-container.is-ready { opacity:1; }
+#carousel-container.is-loading { contain-intrinsic-size: 292px 520px; } /* ajuste à sua altura */
