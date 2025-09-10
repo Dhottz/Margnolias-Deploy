@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Mango';
-  src: url('/static/fonts/Mango.ttf') format('truetype');
+  src: url('/fonts/Mango.ttf') format('truetype');
 }
 
 *,
@@ -21,7 +21,7 @@ body, html{
 }
 
 .hero {
-  background: url("/static/images/img01.JPG") center/cover no-repeat;
+  background: url("/images/img01.JPG") center/cover no-repeat;
   min-height: 100vh;
   width: 100%;
   display: flex;
@@ -134,7 +134,7 @@ body, html{
   border: 1px solid #daa220;
   padding: 0.15rem 1rem;
   border-radius: 30px;
-  font-size: clamp(0.9rem, 3.2vw, 2rem);
+  font-size: clamp(1.2rem, 3.2vw, 2rem);
   color: #f4f4e9;
   margin-bottom: 0.2rem;
 }
@@ -429,16 +429,15 @@ body, html{
   z-index: 2;
   box-shadow: 0 8px 16px #0001;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items:center;
   justify-content: center;
   position: relative;
 }
 
 .semi-circle img {
-  width: 7vw;
-  width: clamp(50px, 7vw, 150px);
+  width: clamp(30px, 10vw, 80px);
   display: block;
-  margin-bottom: 1.5rem;
 }
 
 .title {
@@ -814,9 +813,9 @@ body, html{
     height: 10vw;
   }
 
-  .semi-circle img {
+  /*.semi-circle img {
     width: 8vw;
-  }
+  }*/
 
   .title {
     white-space: normal;
