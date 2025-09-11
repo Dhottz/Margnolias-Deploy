@@ -185,9 +185,9 @@
 
 
 (function () {
-  const actionUrl = 'https://script.google.com/macros/s/AKfycbwMFD7Wa3d_IB6O7b14KeRy2FvXC_DqYb3DGl5ZEleLb6iFfTXkQD-vAjBXxMYKwX9TsA/exec';
+  const actionUrl = 'https://script.google.com/macros/s/AKfycby_xNmQksW_P6Ojxiq_QkVIKKqmz6UiDX4qt1f-xL99n_5jfrIpK0CuSw1rSkAl3gTerw/exec';
   const sharedSecret = 'QU3MH@CK31@e0T@R10'; // igual ao do backend
-  const whatsappNumber = '5521968095690'; // ex.: 5521999999999
+  const whatsappNumber = '5521968096590'; // ex.: 5521999999999
   const msgTemplate = (nome, tel) => `Olá! Meu nome é ${nome} (tel: ${tel}). Tenho interesse nos terrenos Magnólias II.`;
 
   const form = document.getElementById('leadForm');
@@ -209,25 +209,29 @@
     e.preventDefault();
     if (!form.reportValidity()) return;
 
-    const nomeVal = nome.value.trim();
-    const emailVal = email.value.trim();
-    const telDigits = normalizePhone(telefone.value);
+    const nomeVal   = nome.value.trim();
+    const emailVal  = email.value.trim();
+    const telDigits = (telefone.value || '').replace(/\D/g, '');
 
-    const fd = new FormData();
-    fd.append('secret', sharedSecret);
-    fd.append('nome', nomeVal);
-    fd.append('email', emailVal);
-    fd.append('telefone', telDigits);
-    fd.append('page', location.href);
-    fd.append('utm', getUTM());
-    // Opcionalmente: fd.append('ua', navigator.userAgent);
+    const data = new URLSearchParams();
+    data.set('secret',   sharedSecret);
+    data.set('nome',     nomeVal);
+    data.set('email',    emailVal);
+    data.set('telefone', telDigits);
+    data.set('page',     location.href);
+    data.set('utm',      getUTM());
 
-    fetch(actionUrl, { method: 'POST', body: fd, mode: 'no-cors' })
-      .catch(() => {})
-      .finally(() => {
-        const waMsg = msgTemplate(nomeVal, telDigits);
-        const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
-        window.location.href = waURL;
-      });
+    fetch(actionUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body: data.toString(),
+      mode: 'no-cors'
+    })
+    .catch(() => {})
+    .finally(() => {
+      const waMsg = msgTemplate(nomeVal, telDigits);
+      const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
+      window.location.href = waURL;
+    });
   });
 })();
