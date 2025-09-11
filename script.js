@@ -179,3 +179,55 @@
     requestAnimationFrame(animate);
   });
 })();
+
+
+// Formulário – AppsScript + WhatsApp
+
+
+(function () {
+  const actionUrl = 'https://script.google.com/macros/s/AKfycbwMFD7Wa3d_IB6O7b14KeRy2FvXC_DqYb3DGl5ZEleLb6iFfTXkQD-vAjBXxMYKwX9TsA/exec';
+  const sharedSecret = 'QU3MH@CK31@e0T@R10'; // igual ao do backend
+  const whatsappNumber = '5521968095690'; // ex.: 5521999999999
+  const msgTemplate = (nome, tel) => `Olá! Meu nome é ${nome} (tel: ${tel}). Tenho interesse nos terrenos Magnólias II.`;
+
+  const form = document.getElementById('leadForm');
+  const nome = document.getElementById('nome');
+  const email = document.getElementById('email');
+  const telefone = document.getElementById('telefone');
+
+  const getUTM = () => {
+    const usp = new URLSearchParams(location.search);
+    return ['utm_source','utm_medium','utm_campaign','utm_term','utm_content']
+      .map(k => usp.get(k) ? `${k}=${usp.get(k)}` : '')
+      .filter(Boolean)
+      .join('&');
+  };
+
+  const normalizePhone = (s) => (s || '').replace(/\D/g, '');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const nomeVal = nome.value.trim();
+    const emailVal = email.value.trim();
+    const telDigits = normalizePhone(telefone.value);
+
+    const fd = new FormData();
+    fd.append('secret', sharedSecret);
+    fd.append('nome', nomeVal);
+    fd.append('email', emailVal);
+    fd.append('telefone', telDigits);
+    fd.append('page', location.href);
+    fd.append('utm', getUTM());
+    // Opcionalmente: fd.append('ua', navigator.userAgent);
+
+    fetch(actionUrl, { method: 'POST', body: fd, mode: 'no-cors' })
+      .catch(() => {})
+      .finally(() => {
+        const waMsg = msgTemplate(nomeVal, telDigits);
+        const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
+        window.location.href = waURL;
+      });
+  });
+})();
