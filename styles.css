@@ -566,7 +566,6 @@ body, html{
 
 .cta-btn2{
   width: auto;
-  font-family: 'Mango';
   font-size: clamp(1.5rem, 4vw, 2rem);
   margin-top: 1rem;
   color: #002110;

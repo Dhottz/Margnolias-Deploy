@@ -186,14 +186,26 @@
 
 (function () {
   const actionUrl = 'https://script.google.com/macros/s/AKfycby_xNmQksW_P6Ojxiq_QkVIKKqmz6UiDX4qt1f-xL99n_5jfrIpK0CuSw1rSkAl3gTerw/exec';
-  const sharedSecret = 'QU3MH@CK31@e0T@R10'; // igual ao do backend
-  const whatsappNumber = '5521968096590'; // ex.: 5521999999999
-  const msgTemplate = (nome, tel) => `Olá! Meu nome é ${nome} (tel: ${tel}). Tenho interesse nos terrenos Magnólias II.`;
+  const sharedSecret   = 'QU3MH@CK31@e0T@R10';
+  const whatsappNumber = '5521968096590';
+  const msgTemplate    = (nome, tel) => `Olá! Meu nome é ${nome} (tel: ${tel}). Tenho interesse nos terrenos Magnólias II.`;
 
-  const form = document.getElementById('leadForm');
-  const nome = document.getElementById('nome');
-  const email = document.getElementById('email');
-  const telefone = document.getElementById('telefone');
+  const form     = document.getElementById('leadForm');
+  const nomeEl   = document.getElementById('nome');
+  const emailEl  = document.getElementById('email');
+  const telEl    = document.getElementById('telefone');
+
+  const digits = s => (s || '').replace(/\D/g, '');
+  const onlyLetters = s => (s || '').normalize('NFC').replace(/[^A-Za-zÀ-ÖØ-öø-ÿ'´`^~\s-]/g, '');
+  const collapseSpaces = s => s.replace(/\s+/g, ' ').trim();
+
+  const formatBRPhone = d => {
+    // d = só dígitos (limitado a 11)
+    if (d.length <= 2) return `(${d}`;
+    if (d.length <= 6) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+    if (d.length <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;      // fixo (8 dígitos total: 2+4+4)
+    return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7,11)}`;                        // celular (9 dígitos: 2+5+4)
+  };
 
   const getUTM = () => {
     const usp = new URLSearchParams(location.search);
@@ -203,15 +215,73 @@
       .join('&');
   };
 
-  const normalizePhone = (s) => (s || '').replace(/\D/g, '');
+  // === Nome: bloqueia números/símbolos, normaliza espaços ===
+  nomeEl.addEventListener('input', () => {
+    const cleaned = collapseSpaces(onlyLetters(nomeEl.value));
+    if (cleaned !== nomeEl.value) {
+      const pos = nomeEl.selectionStart;
+      nomeEl.value = cleaned;
+      nomeEl.setSelectionRange(pos, pos);
+    }
+    nomeEl.setCustomValidity('');
+  });
 
+  // === Email: reforça validação (sem espaços, formato básico) ===
+  const validateEmail = () => {
+    const v = emailEl.value.trim();
+    emailEl.value = v;
+    if (!v) { emailEl.setCustomValidity('Informe seu e-mail.'); return; }
+    if (/\s/.test(v)) { emailEl.setCustomValidity('O e-mail não pode ter espaços.'); return; }
+    // validação simples e eficaz
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    emailEl.setCustomValidity(ok ? '' : 'Digite um e-mail válido, ex.: nome@dominio.com');
+  };
+  emailEl.addEventListener('input', () => { emailEl.setCustomValidity(''); });
+  emailEl.addEventListener('blur', validateEmail);
+
+  // === Telefone BR: aceita só dígitos, aplica máscara e valida 10 ou 11 dígitos ===
+  telEl.addEventListener('input', () => {
+    let d = digits(telEl.value).slice(0, 11);
+    telEl.value = formatBRPhone(d);
+    telEl.setCustomValidity('');
+  });
+  const validatePhone = () => {
+    const d = digits(telEl.value);
+    if (!d) { telEl.setCustomValidity('Informe seu telefone com DDD.'); return; }
+    if (d.length !== 10 && d.length !== 11) {
+      telEl.setCustomValidity('Use DDD + número. Ex.: (21) 99999-9999');
+      return;
+    }
+    // opcional: bloquear celulares sem o dígito 9 em regiões que exigem
+    // if (d.length === 11 && d[2] !== '9') telEl.setCustomValidity('Celular deve iniciar com 9.');
+    else telEl.setCustomValidity('');
+  };
+  telEl.addEventListener('blur', validatePhone);
+
+  // Bloqueio extra de colagem inválida no telefone
+  telEl.addEventListener('paste', e => {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData('text');
+    const d = digits(text).slice(0, 11);
+    telEl.value = formatBRPhone(d);
+  });
+
+  // Submit
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!form.reportValidity()) return;
 
-    const nomeVal   = nome.value.trim();
-    const emailVal  = email.value.trim();
-    const telDigits = (telefone.value || '').replace(/\D/g, '');
+    // força validações de blur
+    validateEmail();
+    validatePhone();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const nomeVal   = collapseSpaces(nomeEl.value);
+    const emailVal  = emailEl.value.trim();
+    const telDigits = digits(telEl.value);
 
     const data = new URLSearchParams();
     data.set('secret',   sharedSecret);
@@ -221,6 +291,11 @@
     data.set('page',     location.href);
     data.set('utm',      getUTM());
 
+    // feedback visual rápido (opcional)
+    const btn = document.getElementById('btnSubmit');
+    const btnTxt = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
+
     fetch(actionUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
@@ -229,6 +304,7 @@
     })
     .catch(() => {})
     .finally(() => {
+      if (btn) { btn.disabled = false; btn.textContent = btnTxt; }
       const waMsg = msgTemplate(nomeVal, telDigits);
       const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
       window.location.href = waURL;
