@@ -21,7 +21,7 @@ body, html{
 }
 
 .hero {
-  background: url("/images/img01.webp") center/cover no-repeat;
+  background: url("/images/hero-mag.jpg") center/cover no-repeat;
   min-height: 100vh;
   width: 100%;
   display: flex;
