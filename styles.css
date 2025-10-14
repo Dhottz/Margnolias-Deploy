@@ -910,6 +910,16 @@ body, html{
     margin-top: -2.2rem;
   }
 }
+
+@media (min-width: 650px) and (max-width: 720px) {
+  .contorno_dir{
+    margin-top: -4rem;
+  }
+  
+  .contorno_esq {
+    margin-top: -4rem;
+}
+}
 @media (max-width: 470px) {
   .mobile-break {
     display: block;
