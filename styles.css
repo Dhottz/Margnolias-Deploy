@@ -596,7 +596,7 @@ body, html{
   font-weight: 100;
   font-size: clamp(2.8rem, 7vw, 6rem);
   text-align: center;
-  padding: 2rem 0 1rem 0;
+  padding: 1rem 0 1rem 0;
 }
 
 .badges2 {
@@ -604,7 +604,7 @@ body, html{
   display: flex;
   gap: 3rem;
   flex-wrap: wrap;
-  margin-top: 0.5rem;
+  margin-top: 0;
   
 }
 
@@ -640,7 +640,7 @@ body, html{
   gap: clamp(10px, 1.8vw, 24px);
   max-width: min(96vw, 1400px);
   margin: 0 auto;
-  padding: 0 clamp(8px, 1.6vw, 24px);
+  padding: clamp(15px, 1.6vw, 50px);
   box-sizing: border-box;
 }
 
@@ -896,21 +896,30 @@ body, html{
     align-items: flex-start;
   }
   .contorno_dir, .contorno_esq {
-    transform: translateY(6vw);
+    transform: translateY(5vw);
   }
   .contorno_dir{
     width: clamp(4rem, 15vw, 200px);
     margin-left: -1.5rem;
+    margin-top: -2.2rem;
   }
   
   .contorno_esq {
     width: clamp(4rem, 15vw, 200px);
     margin-right: -1.2rem;
+    margin-top: -2.2rem;
   }
 }
 @media (max-width: 470px) {
   .mobile-break {
     display: block;
+  }
+  .contorno_dir{
+    margin-top: 0;
+  }
+  
+  .contorno_esq {
+    margin-top: 0;
   }
 }
 
