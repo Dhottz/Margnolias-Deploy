@@ -588,7 +588,6 @@ body, html{
 }
 .map-section{
   background: linear-gradient(to bottom, #002110 20%, #00331b 100%);
-  border-radius: 0 0 100px 100px;
 }
 .map-title{
   font-family: 'Mango', serif;
@@ -641,6 +640,7 @@ body, html{
   max-width: min(96vw, 1400px);
   margin: 0 auto;
   padding: clamp(15px, 1.6vw, 50px);
+  padding-bottom: clamp(16px, 5vh, 2rem);
   box-sizing: border-box;
 }
 
@@ -707,7 +707,6 @@ body, html{
     font-weight: 400;
   }
   .cta-btn2 {
-    font-size: 1.8rem;
     padding: 0.5rem 1.5rem;
   }
 }
@@ -873,9 +872,6 @@ body, html{
   .cta p span {
     font-size: 2.3rem;
   }
-  .map-section{
-    border-radius: 0 0 50px 50px;
-  }
   .badges2 {
     gap: 1rem;
   }
@@ -884,7 +880,6 @@ body, html{
   }
 
   .cta-btn2 {
-    font-size: 1.5rem;
     padding: 0.5rem 1.2rem;
     width: auto;
   }
