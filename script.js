@@ -187,7 +187,7 @@
 (function () {
   const actionUrl = 'https://script.google.com/macros/s/AKfycby_xNmQksW_P6Ojxiq_QkVIKKqmz6UiDX4qt1f-xL99n_5jfrIpK0CuSw1rSkAl3gTerw/exec';
   const sharedSecret   = 'QU3MH@CK31@e0T@R10';
-  const whatsappNumber = '5521968096590';
+  const whatsappNumber = '5522981111614';
   const msgTemplate    = (nome, tel) => `Olá! Meu nome é ${nome} (tel: ${tel}). Tenho interesse nos terrenos Magnólias II.`;
 
   const form     = document.getElementById('leadForm');
@@ -307,7 +307,7 @@
       if (btn) { btn.disabled = false; btn.textContent = btnTxt; }
       const waMsg = msgTemplate(nomeVal, telDigits);
       const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
-      window.location.href = waURL;
+      trackAndGo(waURL);
     });
   });
 })();
