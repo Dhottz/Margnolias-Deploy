@@ -67,6 +67,15 @@ def notify_telegram(lead_id, nome, telefone, email, utm, pagina):
         app.logger.error("Falha ao avisar no Telegram (lead %s): %s", lead_id, exc)
 
 
+@app.after_request
+def seo_headers(resp):
+    if request.path.startswith(("/painel", "/api/")):
+        resp.headers["X-Robots-Tag"] = "noindex, nofollow"
+    elif request.path.startswith(("/images/", "/fonts/")):
+        resp.headers["Cache-Control"] = "public, max-age=604800"  # 7 dias
+    return resp
+
+
 @app.route("/")
 def index():
     return send_from_directory(app.static_folder, "index.html")
