@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel – Magnólias II</title>
+  <style>
+    :root { --verde:#002110; --dourado:#daa220; --creme:#f4f4e9; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, sans-serif; background:var(--creme); color:#222; }
+    header { background:var(--verde); color:var(--creme); padding:.8rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+    header h1 { margin:0; font-size:1.1rem; color:var(--dourado); }
+    header a { color:var(--creme); font-size:.9rem; margin-left:1rem; }
+    main { max-width:1000px; margin:0 auto; padding:1rem; }
+    .tabs { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:1rem; }
+    .tabs a { padding:.35rem .8rem; border-radius:99px; background:#fff; border:1px solid #d9d9c8; color:#222; text-decoration:none; font-size:.85rem; }
+    .tabs a.on { background:var(--verde); color:var(--creme); border-color:var(--verde); }
+    form.busca { display:flex; gap:.5rem; margin-bottom:1rem; }
+    input, select, textarea, button { font:inherit; padding:.45rem .6rem; border:1px solid #c9c9b8; border-radius:8px; }
+    form.busca input { flex:1; }
+    button { background:var(--dourado); border:none; color:var(--verde); font-weight:600; cursor:pointer; }
+    .card { background:#fff; border-radius:12px; padding:.9rem 1rem; margin-bottom:.8rem; box-shadow:0 1px 3px #0001; }
+    .top { display:flex; justify-content:space-between; flex-wrap:wrap; gap:.4rem; }
+    .nome { font-weight:700; }
+    .meta { color:#666; font-size:.82rem; }
+    .wa { display:inline-block; margin:.3rem 0; padding:.3rem .8rem; background:#25d366; color:#fff; border-radius:99px; text-decoration:none; font-weight:600; }
+    .edit { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem; }
+    .edit textarea { flex:1; min-width:200px; height:2.6rem; }
+    .st { font-size:.75rem; padding:.15rem .6rem; border-radius:99px; background:#eee; }
+    .st-novo { background:#fde9a8; } .st-fechado { background:#bfe8c8; } .st-descartado { background:#ddd; }
+    .vazio { text-align:center; color:#777; padding:2rem; }
+  </style>
+</head>
+<body>
+  {% block body %}{% endblock %}
+</body>
+</html>

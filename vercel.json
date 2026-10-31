@@ -1,0 +1,16 @@
+{
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://SEU-APP.up.railway.app/api/:path*" },
+    { "source": "/painel", "destination": "https://SEU-APP.up.railway.app/painel" },
+    { "source": "/painel/:path*", "destination": "https://SEU-APP.up.railway.app/painel/:path*" }
+  ],
+  "headers": [
+    {
+      "source": "/(images|fonts)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    }
+  ]
+}

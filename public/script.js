@@ -181,19 +181,11 @@
 })();
 
 
-// Formulário – AppsScript + WhatsApp
-
+// Formulário – salva o lead no servidor + WhatsApp (hero e modal usam a mesma lógica)
 
 (function () {
-  const actionUrl = 'https://script.google.com/macros/s/AKfycby_xNmQksW_P6Ojxiq_QkVIKKqmz6UiDX4qt1f-xL99n_5jfrIpK0CuSw1rSkAl3gTerw/exec';
-  const sharedSecret   = 'QU3MH@CK31@e0T@R10';
-  const whatsappNumber = '5522981111614';
+  const whatsappNumber = '5522992634219';
   const msgTemplate    = (nome, tel) => `Olá! Meu nome é ${nome} (tel: ${tel}). Tenho interesse nos terrenos Magnólias II.`;
-
-  const form     = document.getElementById('leadForm');
-  const nomeEl   = document.getElementById('nome');
-  const emailEl  = document.getElementById('email');
-  const telEl    = document.getElementById('telefone');
 
   const digits = s => (s || '').replace(/\D/g, '');
   const onlyLetters = s => (s || '').normalize('NFC').replace(/[^A-Za-zÀ-ÖØ-öø-ÿ'´`^~\s-]/g, '');
@@ -215,99 +207,140 @@
       .join('&');
   };
 
-  // === Nome: bloqueia números/símbolos, normaliza espaços ===
-  nomeEl.addEventListener('input', () => {
-    const cleaned = collapseSpaces(onlyLetters(nomeEl.value));
-    if (cleaned !== nomeEl.value) {
-      const pos = nomeEl.selectionStart;
-      nomeEl.value = cleaned;
-      nomeEl.setSelectionRange(pos, pos);
-    }
-    nomeEl.setCustomValidity('');
-  });
+  function setupLeadForm(form) {
+    const nomeEl  = form.elements.nome;
+    const emailEl = form.elements.email;
+    const telEl   = form.elements.telefone;
+    const btn     = form.querySelector('button[type="submit"]');
 
-  // === Email: reforça validação (sem espaços, formato básico) ===
-  const validateEmail = () => {
-    const v = emailEl.value.trim();
-    emailEl.value = v;
-    if (!v) { emailEl.setCustomValidity('Informe seu e-mail.'); return; }
-    if (/\s/.test(v)) { emailEl.setCustomValidity('O e-mail não pode ter espaços.'); return; }
-    // validação simples e eficaz
-    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-    emailEl.setCustomValidity(ok ? '' : 'Digite um e-mail válido, ex.: nome@dominio.com');
-  };
-  emailEl.addEventListener('input', () => { emailEl.setCustomValidity(''); });
-  emailEl.addEventListener('blur', validateEmail);
-
-  // === Telefone BR: aceita só dígitos, aplica máscara e valida 10 ou 11 dígitos ===
-  telEl.addEventListener('input', () => {
-    let d = digits(telEl.value).slice(0, 11);
-    telEl.value = formatBRPhone(d);
-    telEl.setCustomValidity('');
-  });
-  const validatePhone = () => {
-    const d = digits(telEl.value);
-    if (!d) { telEl.setCustomValidity('Informe seu telefone com DDD.'); return; }
-    if (d.length !== 10 && d.length !== 11) {
-      telEl.setCustomValidity('Use DDD + número. Ex.: (21) 99999-9999');
-      return;
-    }
-    // opcional: bloquear celulares sem o dígito 9 em regiões que exigem
-    // if (d.length === 11 && d[2] !== '9') telEl.setCustomValidity('Celular deve iniciar com 9.');
-    else telEl.setCustomValidity('');
-  };
-  telEl.addEventListener('blur', validatePhone);
-
-  // Bloqueio extra de colagem inválida no telefone
-  telEl.addEventListener('paste', e => {
-    e.preventDefault();
-    const text = (e.clipboardData || window.clipboardData).getData('text');
-    const d = digits(text).slice(0, 11);
-    telEl.value = formatBRPhone(d);
-  });
-
-  // Submit
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    // força validações de blur
-    validateEmail();
-    validatePhone();
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    const nomeVal   = collapseSpaces(nomeEl.value);
-    const emailVal  = emailEl.value.trim();
-    const telDigits = digits(telEl.value);
-
-    const data = new URLSearchParams();
-    data.set('secret',   sharedSecret);
-    data.set('nome',     nomeVal);
-    data.set('email',    emailVal);
-    data.set('telefone', telDigits);
-    data.set('page',     location.href);
-    data.set('utm',      getUTM());
-
-    // feedback visual rápido (opcional)
-    const btn = document.getElementById('btnSubmit');
-    const btnTxt = btn ? btn.textContent : '';
-    if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
-
-    fetch(actionUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-      body: data.toString(),
-      mode: 'no-cors'
-    })
-    .catch(() => {})
-    .finally(() => {
-      if (btn) { btn.disabled = false; btn.textContent = btnTxt; }
-      const waMsg = msgTemplate(nomeVal, telDigits);
-      const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
-      trackAndGo(waURL);
+    // === Nome: bloqueia números/símbolos, normaliza espaços ===
+    nomeEl.addEventListener('input', () => {
+      const cleaned = collapseSpaces(onlyLetters(nomeEl.value));
+      if (cleaned !== nomeEl.value) {
+        const pos = nomeEl.selectionStart;
+        nomeEl.value = cleaned;
+        nomeEl.setSelectionRange(pos, pos);
+      }
+      nomeEl.setCustomValidity('');
     });
+
+    // === Email: reforça validação (sem espaços, formato básico) ===
+    const validateEmail = () => {
+      const v = emailEl.value.trim();
+      emailEl.value = v;
+      if (!v) { emailEl.setCustomValidity('Informe seu e-mail.'); return; }
+      if (/\s/.test(v)) { emailEl.setCustomValidity('O e-mail não pode ter espaços.'); return; }
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+      emailEl.setCustomValidity(ok ? '' : 'Digite um e-mail válido, ex.: nome@dominio.com');
+    };
+    emailEl.addEventListener('input', () => { emailEl.setCustomValidity(''); });
+    emailEl.addEventListener('blur', validateEmail);
+
+    // === Telefone BR: aceita só dígitos, aplica máscara e valida 10 ou 11 dígitos ===
+    telEl.addEventListener('input', () => {
+      telEl.value = formatBRPhone(digits(telEl.value).slice(0, 11));
+      telEl.setCustomValidity('');
+    });
+    const validatePhone = () => {
+      const d = digits(telEl.value);
+      if (!d) { telEl.setCustomValidity('Informe seu telefone com DDD.'); return; }
+      if (d.length !== 10 && d.length !== 11) {
+        telEl.setCustomValidity('Use DDD + número. Ex.: (21) 99999-9999');
+        return;
+      }
+      telEl.setCustomValidity('');
+    };
+    telEl.addEventListener('blur', validatePhone);
+
+    // Bloqueio extra de colagem inválida no telefone
+    telEl.addEventListener('paste', e => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text');
+      telEl.value = formatBRPhone(digits(text).slice(0, 11));
+    });
+
+    // Submit
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      validateEmail();
+      validatePhone();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const nomeVal   = collapseSpaces(nomeEl.value);
+      const emailVal  = emailEl.value.trim();
+      const telDigits = digits(telEl.value);
+
+      const payload = {
+        nome:     nomeVal,
+        email:    emailVal,
+        telefone: telDigits,
+        page:     location.href,
+        utm:      getUTM(),
+        website:  form.elements.website ? form.elements.website.value : ''
+      };
+
+      const btnTxt = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
+
+      // Se o servidor falhar ou demorar, a pessoa vai para o WhatsApp do mesmo jeito.
+      const ctrl = new AbortController();
+      const abortTO = setTimeout(() => ctrl.abort(), 5000);
+
+      fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true,
+        signal: ctrl.signal
+      })
+      .catch(() => {})
+      .finally(() => {
+        clearTimeout(abortTO);
+        if (btn) { btn.disabled = false; btn.textContent = btnTxt; }
+        const waMsg = msgTemplate(nomeVal, telDigits);
+        const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
+        trackAndGo(waURL);
+      });
+    });
+  }
+
+  document.querySelectorAll('form[data-lead]').forEach(setupLeadForm);
+
+  // ---- Modal do formulário: CTAs e botão flutuante ----
+  const leadModal = document.getElementById('lead-modal');
+  let lastFocus = null;
+
+  function openLeadModal() {
+    if (!leadModal) return;
+    lastFocus = document.activeElement;
+    leadModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const first = leadModal.querySelector('input[name="nome"]');
+    if (first) setTimeout(() => first.focus(), 50);
+  }
+
+  function closeLeadModal() {
+    if (!leadModal) return;
+    leadModal.classList.remove('open');
+    document.body.style.overflow = 'auto';
+    if (lastFocus) lastFocus.focus();
+  }
+
+  document.querySelectorAll('[data-open-lead]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); openLeadModal(); });
   });
+
+  if (leadModal) {
+    leadModal.addEventListener('click', e => {
+      if (e.target === leadModal || e.target.closest('[data-close-lead]')) closeLeadModal();
+    });
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && leadModal.classList.contains('open')) closeLeadModal();
+    });
+  }
 })();

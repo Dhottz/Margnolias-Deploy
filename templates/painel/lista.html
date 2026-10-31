@@ -1,0 +1,41 @@
+{% extends "painel/base.html" %}
+{% block body %}
+<header>
+  <h1>Leads – Magnólias II</h1>
+  <span><a href="{{ url_for('exportar') }}">Exportar CSV</a><a href="{{ url_for('logout') }}">Sair</a></span>
+</header>
+<main>
+  <div class="tabs">
+    <a href="{{ url_for('painel', q=busca) }}" class="{{ 'on' if not status }}">Todos ({{ contagem.values()|sum }})</a>
+    {% for s in statuses %}
+    <a href="{{ url_for('painel', status=s, q=busca) }}" class="{{ 'on' if status == s }}">{{ s|capitalize }} ({{ contagem.get(s, 0) }})</a>
+    {% endfor %}
+  </div>
+  <form class="busca" method="get">
+    {% if status %}<input type="hidden" name="status" value="{{ status }}">{% endif %}
+    <input type="search" name="q" value="{{ busca }}" placeholder="Buscar por nome, telefone ou e-mail">
+    <button type="submit">Buscar</button>
+  </form>
+
+  {% for l in leads %}
+  {% set tel = l.telefone if l.telefone.startswith('55') else '55' ~ l.telefone %}
+  <div class="card">
+    <div class="top">
+      <span class="nome">{{ l.nome }}</span>
+      <span class="meta">{{ l.criado_em }} · <span class="st st-{{ l.status }}">{{ l.status }}</span></span>
+    </div>
+    <div class="meta">{{ l.email }}{% if l.utm %} · origem: {{ l.utm }}{% endif %}</div>
+    <a class="wa" href="https://wa.me/{{ tel }}" target="_blank" rel="noopener">WhatsApp {{ l.telefone }}</a>
+    <form class="edit" method="post" action="{{ url_for('atualizar', lead_id=l.id) }}">
+      <select name="status">
+        {% for s in statuses %}<option value="{{ s }}" {{ 'selected' if s == l.status }}>{{ s|capitalize }}</option>{% endfor %}
+      </select>
+      <textarea name="obs" placeholder="Observações">{{ l.obs }}</textarea>
+      <button type="submit">Salvar</button>
+    </form>
+  </div>
+  {% else %}
+  <p class="vazio">Nenhum lead encontrado.</p>
+  {% endfor %}
+</main>
+{% endblock %}

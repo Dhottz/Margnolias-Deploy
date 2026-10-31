@@ -11,7 +11,7 @@
     <link rel="preload" as="image" href="/images/magnolia.png" fetchpriority="high">
    
     <!-- Google tag-->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17652330770"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
@@ -52,10 +52,11 @@
               <div class="form-container">
                 <div class="form-content">
                   <p>Cadastre-se para receber <br><strong>atendimento exclusivo</strong><p>
-                  <form id="leadForm" autocomplete="on" novalidate>
+                  <form id="leadForm" data-lead autocomplete="on" novalidate>
                     <input type="text" placeholder="Nome" name="nome" id="nome" autocomplete="name" inputmode="text" required>
                     <input type="email" placeholder="E-mail" name="email" id="email" autocomplete="email" inputmode="email" required>
                     <input type="tel" placeholder="Telefone" name="telefone" id="telefone" autocomplete="tel" inputmode="numeric" maxlength="16" required>
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
                     <button type="submit" id="btnSubmit">Quero ser atendido agora</button>
                   </form>
                 </div>
@@ -93,7 +94,7 @@
       <div class="carousel-dots" id="carousel-dots"></div>
         <p>Um refúgio elevado em bairro nobre, onde a tranquilidade da natureza<br>
           se encontra próximo ao conforto da vida urbana</p>
-        <a href="#top" class="cta-btn">FALE COM O VENDEDOR</a>
+        <a href="#formulario" data-open-lead class="cta-btn">FALE COM O VENDEDOR</a>
       </div>
     </div>
 
@@ -179,7 +180,7 @@
           </div>
           <div class="cta">
             <p>Terrenos de <span>400m² a 600m²</span><br>e frente de 14m a 16m <br> 40 unidades</p>
-            <a href="#top" class="cta-btn">GARANTA SEU ESPAÇO</a>
+            <a href="#formulario" data-open-lead class="cta-btn">GARANTA SEU ESPAÇO</a>
           </div>
         </div>
       </div>
@@ -201,12 +202,36 @@
                 loading="lazy" 
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
                 
-              <a href="#top" class="cta-btn">VIVA O MÁXIMO BEM-ESTAR</a>
+              <a href="#formulario" data-open-lead class="cta-btn">VIVA O MÁXIMO BEM-ESTAR</a>
             </div>
             <img class="contorno_dir" src="/images/contorno direita.png" alt="Magnólias Direita">
           </div>
         </div>
       </div>
+  <!-- Botão flutuante do WhatsApp -->
+  <a class="wa-float" id="wa-float" aria-label="Falar com o vendedor no WhatsApp"
+     href="https://wa.me/5522992634219?text=Ol%C3%A1!%20Tenho%20interesse%20nos%20terrenos%20Magn%C3%B3lias%20II."
+     target="_blank" rel="noopener">
+    <img src="/images/whatsapp-icon.png" alt="" width="34" height="34">
+  </a>
+
+  <!-- Modal do formulário -->
+  <div class="lead-modal" id="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
+    <div class="lead-modal__box">
+      <button type="button" class="lead-modal__close" data-close-lead aria-label="Fechar"><i class="bi bi-x-circle"></i></button>
+      <div class="form-content">
+        <p id="lead-modal-title">Cadastre-se para receber <br><strong>atendimento exclusivo</strong></p>
+        <form data-lead autocomplete="on" novalidate>
+          <input type="text" placeholder="Nome" name="nome" autocomplete="name" inputmode="text" required>
+          <input type="email" placeholder="E-mail" name="email" autocomplete="email" inputmode="email" required>
+          <input type="tel" placeholder="Telefone" name="telefone" autocomplete="tel" inputmode="numeric" maxlength="16" required>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <button type="submit">Quero ser atendido agora</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- JavaScript -->
   <script src="/script.js"></script>
   
@@ -216,7 +241,7 @@
     try{
       if (typeof gtag === 'function'){
         gtag('event','conversion',{
-          'send_to':'AW-17652330770', 
+          'send_to':'AW-17652330770/_n5HCMaloq0bEJLipOFB', 
           'event_callback': function(){ window.location.href = url; }
         });
 
