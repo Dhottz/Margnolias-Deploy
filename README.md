@@ -21,4 +21,4 @@ Sem `DATABASE_URL`, usa SQLite (`leads.db`). Sem as variáveis do Telegram, só 
 ## Hospedagem
 - **Railway**: roda o Flask (API `/api/lead`, painel `/painel`, banco Postgres).
 - **Vercel**: serve a pasta `public/` e repassa `/api/*` e `/painel/*` para o Railway (ver `vercel.json`).
-  Troque `SEU-APP.up.railway.app` no `vercel.json` pelo endereço real do Railway.
+  Troque `magnolias-deploy-production.up.railway.app` no `vercel.json` pelo endereço real do Railway.

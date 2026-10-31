@@ -3,9 +3,9 @@
   "buildCommand": null,
   "outputDirectory": "public",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://SEU-APP.up.railway.app/api/:path*" },
-    { "source": "/painel", "destination": "https://SEU-APP.up.railway.app/painel" },
-    { "source": "/painel/:path*", "destination": "https://SEU-APP.up.railway.app/painel/:path*" }
+    { "source": "/api/:path*", "destination": "https://magnolias-deploy-production.up.railway.app/api/:path*" },
+    { "source": "/painel", "destination": "https://magnolias-deploy-production.up.railway.app/painel" },
+    { "source": "/painel/:path*", "destination": "https://magnolias-deploy-production.up.railway.app/painel/:path*" }
   ],
   "headers": [
     {
