@@ -237,6 +237,28 @@
         </div>
       </div>
 
+      <!-- Galeria de fotos e vídeos (itens em /galeria/galeria.json) -->
+      <section class="galeria" id="galeria" aria-labelledby="galeria-titulo">
+        <h2 id="galeria-titulo">Conhe<span>ç</span>a cada detalhe</h2>
+        <p class="galeria__sub">Fotos e vídeos do terreno, da vista e da região</p>
+        <div class="galeria__filtros" role="tablist" aria-label="Filtrar galeria">
+          <button type="button" role="tab" aria-selected="true" data-filtro="todos">Tudo</button>
+          <button type="button" role="tab" aria-selected="false" data-filtro="terreno">O Terreno</button>
+          <button type="button" role="tab" aria-selected="false" data-filtro="regiao">A Região</button>
+          <button type="button" role="tab" aria-selected="false" data-filtro="aerea">Vista Aérea</button>
+        </div>
+        <div class="galeria__grid" id="galeria-grid"></div>
+        <button type="button" class="galeria__mais" id="galeria-mais" hidden>Ver mais</button>
+      </section>
+
+      <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Galeria ampliada" hidden>
+        <button type="button" class="lightbox__fechar" data-lb="fechar" aria-label="Fechar"><i class="bi bi-x-lg"></i></button>
+        <button type="button" class="lightbox__nav lightbox__nav--ant" data-lb="ant" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+        <figure class="lightbox__midia" id="lightbox-midia"></figure>
+        <button type="button" class="lightbox__nav lightbox__nav--prox" data-lb="prox" aria-label="Próximo"><i class="bi bi-chevron-right"></i></button>
+        <div class="lightbox__rodape"><span id="lightbox-legenda"></span><span id="lightbox-contador"></span></div>
+      </div>
+
       <div class="map-background">
         <div class="map-section">
           <h2 class="map-title">Estrategicamente localizado</h2>
@@ -286,6 +308,7 @@
 
   <!-- JavaScript -->
   <script src="/script.js"></script>
+  <script src="/galeria/galeria.js" defer></script>
   
   <script>
 // Função para rastrear o clique e redirecionar
