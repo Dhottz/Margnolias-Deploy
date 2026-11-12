@@ -1,8 +1,8 @@
 [
   { "tipo": "video", "cat": "aerea", "destaque": true, "src": "/galeria/videos/tour-aereo.mp4", "capa": "/galeria/videos/tour-aereo.webp", "thumb": "/galeria/videos/tour-aereo-600.webp", "alt": "Tour aéreo pelo Loteamento Magnólias II" },
 
-  { "tipo": "foto", "cat": "terreno", "src": "/galeria/fotos/terreno-0028-1920.webp", "thumb": "/galeria/fotos/terreno-0028-600.webp", "alt": "Vista aérea dos lotes com o bairro e as montanhas de Nova Friburgo ao fundo" },
-  { "tipo": "foto", "cat": "regiao", "src": "/galeria/fotos/regiao-0719-1920.webp", "thumb": "/galeria/fotos/regiao-0719-600.webp", "alt": "Vista de Nova Friburgo e das montanhas a partir do loteamento" },
+  { "tipo": "foto", "cat": "terreno", "src": "/galeria/fotos/terreno-0028-1920.webp", "thumb": "/galeria/fotos/terreno-0028-600.webp", "alt": "Vista aérea dos lotes com o bairro vizinho e as montanhas ao fundo" },
+  { "tipo": "foto", "cat": "regiao", "src": "/galeria/fotos/regiao-0719-1920.webp", "thumb": "/galeria/fotos/regiao-0719-600.webp", "alt": "Vista do bairro e das montanhas a partir do loteamento" },
   { "tipo": "video", "cat": "aerea", "src": "/galeria/videos/drone-0029.mp4", "capa": "/galeria/videos/drone-0029.webp", "thumb": "/galeria/videos/drone-0029-600.webp", "alt": "Voo de drone sobre os lotes com a serra ao fundo" },
   { "tipo": "foto", "cat": "terreno", "src": "/galeria/fotos/terreno-0021-1920.webp", "thumb": "/galeria/fotos/terreno-0021-600.webp", "alt": "Encosta dos lotes sob céu azul" },
   { "tipo": "foto", "cat": "regiao", "src": "/galeria/fotos/regiao-0721-1920.webp", "thumb": "/galeria/fotos/regiao-0721-600.webp", "alt": "Árvore solitária no alto do terreno com céu azul" },
@@ -11,7 +11,7 @@
   { "tipo": "foto", "cat": "regiao", "src": "/galeria/fotos/regiao-0053-1920.webp", "thumb": "/galeria/fotos/regiao-0053-600.webp", "alt": "Mata e montanhas da região vistas do alto" },
 
   { "tipo": "foto", "cat": "terreno", "src": "/galeria/fotos/terreno-0008-1920.webp", "thumb": "/galeria/fotos/terreno-0008-600.webp", "alt": "Lotes na encosta com a serra ao fundo" },
-  { "tipo": "foto", "cat": "regiao", "src": "/galeria/fotos/regiao-0740-1920.webp", "thumb": "/galeria/fotos/regiao-0740-600.webp", "alt": "Panorama da cidade entre as montanhas" },
+  { "tipo": "foto", "cat": "regiao", "src": "/galeria/fotos/regiao-0740-1920.webp", "thumb": "/galeria/fotos/regiao-0740-600.webp", "alt": "Panorama do bairro entre as montanhas" },
   { "tipo": "foto", "cat": "terreno", "src": "/galeria/fotos/terreno-0014-1920.webp", "thumb": "/galeria/fotos/terreno-0014-600.webp", "alt": "Cruzamento das vias internas visto de cima" },
   { "tipo": "video", "cat": "aerea", "src": "/galeria/videos/drone-0031.mp4", "capa": "/galeria/videos/drone-0031.webp", "thumb": "/galeria/videos/drone-0031-600.webp", "alt": "Drone subindo sobre os lotes revelando a serra" },
   { "tipo": "foto", "cat": "regiao", "src": "/galeria/fotos/regiao-0709-1920.webp", "thumb": "/galeria/fotos/regiao-0709-600.webp", "alt": "Mata nativa ao redor do loteamento" },
